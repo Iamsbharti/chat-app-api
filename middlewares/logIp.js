@@ -5,4 +5,5 @@ exports.logIp = (req, res, next) => {
   let protocol = req.protocol;
   let method = req.method;
   console.log(`${method} requested by -${ip} for -${path} using ${protocol}`);
+  next();
 };
