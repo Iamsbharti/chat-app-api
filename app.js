@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 const { initdb } = require("./initdb");
 const router = require("./routers");
+const { logIp } = require("./middlewares/logIp");
 //init server
 const app = express();
 dotenv.config();
@@ -10,6 +11,8 @@ dotenv.config();
 //init db
 initdb();
 
+//middlewares
+app.use(logIp);
 //routes
 app.use("/api/chat", router);
 
