@@ -14,6 +14,7 @@ initdb();
 
 //middlewares
 app.use(logIp);
+app.use(bodyParser.json());
 //routes
 app.use("/api/chat", router);
 app.use(notfound);
