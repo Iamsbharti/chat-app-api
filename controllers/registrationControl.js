@@ -7,7 +7,7 @@ exports.test = (req, res) => {
 };
 
 exports.register = async (req, res) => {
-  const { email, password } = req.body;
+  const { firstName, lastName, mobile, email, password } = req.body;
   console.log(email, password);
   //validate input
   validateInput = () => {
@@ -17,7 +17,7 @@ exports.register = async (req, res) => {
     console.log(isParamsValidated);
     let result = isParamsValidated
       ? Promise.resolve(req)
-      : Promise.response(true, "Params Not Valid", "email or password");
+      : Promise.reject(response(true, "Params Not Valid", "email or password"));
 
     return result;
   };
@@ -25,11 +25,21 @@ exports.register = async (req, res) => {
 
   createUser = async () => {
     let newUser = new User({
+      firstName: firstName,
+      lastName: lastName,
+      mobile: mobile,
       email: email,
       password: await hashedPassword(password),
     });
-    let createdUser = await User.create(newUser);
-    return response(false, "User Create Success", createUser);
+
+    //check for existing email
+    let user = await User.findOne({ email: email });
+    if (user)
+      return Promise.reject(response(true, "user already exists", email));
+
+    //create user
+    let userCreated = await User.create(newUser);
+    return Promise.resolve(userCreated);
   };
 
   //send response
@@ -38,7 +48,8 @@ exports.register = async (req, res) => {
     await validateInput()
       .then(createUser)
       .then((result) => {
-        res.send(result);
+        delete result.password;
+        res.status(200).send(response(false, "user Create success", result));
       });
   } catch (error) {
     console.warn(error);
