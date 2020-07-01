@@ -28,20 +28,27 @@ exports.login = async (req, res) => {
     console.log("result", result);
 
     return !result
-      ? response(true, "Email or password is wrong", null)
+      ? Promise.reject(response(true, "Email or password is wrong", null))
       : Promise.resolve(user);
   };
   //
-  try {
-    await validateInput()
-      .then(emailExistence)
-      .then((user) => {
-        credentialMatch(user).then((results) => {
+
+  validateInput()
+    .then(emailExistence)
+    .then((user) => {
+      credentialMatch(user)
+        .then((results) => {
+          console.log(result);
           res.send(results);
+        })
+        .catch((error) => {
+          console.log(error);
+          throw new Error(error);
         });
-      });
-  } catch (error) {
-    console.log("Error", error);
-    res.send(error);
-  }
+    })
+    .catch((err) => {
+      console.log("errorhandler");
+      console.log(err);
+      res.send(err);
+    });
 };
