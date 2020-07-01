@@ -14,3 +14,7 @@ exports.notfound = (req, res, next) => {
   res.status(404).json(response(true, "Route not Found", req.path));
   next();
 };
+exports.errorHandler = (error, req, res, next) => {
+  res.status(500).json(response(true, "Internal Server Error", error));
+  next();
+};
