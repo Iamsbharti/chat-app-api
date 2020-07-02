@@ -10,6 +10,10 @@ const schema = mongoose.Schema({
   mobile: {
     type: Number,
   },
+  userId: {
+    type: String,
+    required: true,
+  },
   email: {
     type: String,
     required: true,

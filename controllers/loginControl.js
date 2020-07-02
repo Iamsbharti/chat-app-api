@@ -36,8 +36,19 @@ exports.login = async (req, res) => {
       : Promise.resolve(userModified);
   };
   //generate authToken
-  generateToken = (userDetails) => {
-    console.log("gentoken", userDetails);
+  generateToken = async (userDetails) => {
+    let res;
+    getAuthToken(userDetails, (error, tokenDetails) => {
+      if (error) {
+        console.log(error);
+        res = Promise.reject(response(true, "Error", error));
+      } else {
+        tokenDetails.userId = userDetails.userId;
+        tokenDetails.userDetails = userDetails;
+        res = Promise.resolve(tokenDetails);
+      }
+    });
+    return res;
   };
   /** Function start*/
   validateInput()
@@ -45,8 +56,8 @@ exports.login = async (req, res) => {
     .then(credentialMatch)
     .then(generateToken)
     .then((result) => {
-      console.log(result);
-      res.status(200).json(response(false, "Login Success", apiResponse));
+      console.log("result", result);
+      res.status(200).json(response(false, "Login Success", result));
     })
     .catch((error) => {
       console.log(error);

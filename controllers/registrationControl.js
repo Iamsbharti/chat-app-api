@@ -1,6 +1,7 @@
 const { response, hashedPassword } = require("../lib");
 const { ValidEmail, ValidPassword } = require("../lib/paramsValidation");
 const User = require("../models/User");
+const shortid = require("shortid");
 
 exports.test = (req, res) => {
   res.status(200).json(response(false, "Test Sucess", " welcome to chat-app"));
@@ -25,6 +26,7 @@ exports.register = async (req, res) => {
 
   createUser = async () => {
     let newUser = new User({
+      userId: shortid.generate(),
       firstName: firstName,
       lastName: lastName,
       mobile: mobile,
@@ -48,8 +50,13 @@ exports.register = async (req, res) => {
     await validateInput()
       .then(createUser)
       .then((result) => {
-        delete result.password;
-        res.status(200).send(response(false, "user Create success", result));
+        let apiResponse = result.toObject();
+        delete apiResponse.password;
+        delete apiResponse._id;
+        delete apiResponse.__v;
+        res
+          .status(200)
+          .send(response(false, "user Create success", apiResponse));
       });
   } catch (error) {
     console.warn(error);
