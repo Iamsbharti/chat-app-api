@@ -54,16 +54,13 @@ exports.login = async (req, res) => {
   };
   //save token for authorization needs
   saveAuthToken = async (userTokenDetails) => {
-    console.log("save auth token");
     const { authToken, userDetails } = userTokenDetails;
     const { created, userId } = userDetails;
     const tokenSecret = process.env.TOKEN_SECRET;
-    console.log("save token:", created, userId, tokenSecret);
     let res;
     //search for existing token if found overwrite it
     let foundUsersAuth = await Auth.findOne({ userId: userId });
     if (foundUsersAuth) {
-      console.log("auth details found for", userId);
       //update
       let updateOptions = {
         authToken: authToken,
@@ -71,15 +68,10 @@ exports.login = async (req, res) => {
         tokenGenerationTime: created,
       };
       let updatedDetails = await foundUsersAuth.save(updateOptions);
-      if (updatedDetails) {
-        console.log("resolve updates");
-        res = Promise.resolve(userTokenDetails);
-      } else {
-        console.log("reject update");
-        res = Promise.reject(response(true, 500, "Save Token Error", error));
-      }
+      res = updatedDetails
+        ? Promise.resolve(userTokenDetails)
+        : Promise.reject(response(true, 500, "Save Token Error", error));
     } else {
-      console.log("auth details not found");
       //create
       let newToken = new Auth({
         userId: userId,
@@ -88,13 +80,10 @@ exports.login = async (req, res) => {
         tokenGenerationTime: created,
       });
       let createdAuth = await Auth.create(newToken);
-      if (createdAuth) {
-        console.log("resolve create auth");
-        res = Promise.resolve(userTokenDetails);
-      } else {
-        console.log("reject create auth");
-        res = Promise.reject(response(true, 500, "Save Token Error", error));
-      }
+
+      res = updatedDetails
+        ? Promise.resolve(userTokenDetails)
+        : Promise.reject(response(true, 500, "Save Token Error", error));
     }
     return res;
   };
