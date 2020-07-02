@@ -4,7 +4,7 @@ const User = require("../models/User");
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;
-  console.log(email, password);
+  //console.log(email, password);
   //inputvalidation
   validateInput = () => {
     let isInputValid = ValidEmail(email) === email;
@@ -14,7 +14,7 @@ exports.login = async (req, res) => {
   };
   //check for email existence
   emailExistence = async () => {
-    console.log("email existence call");
+    //console.log("email existence call");
     let user = await User.findOne({ email: email });
     //console.log(user.password);
     return !user
@@ -23,7 +23,7 @@ exports.login = async (req, res) => {
   };
   //compare password
   credentialMatch = async (user) => {
-    console.log("cred-match", password, user.password);
+    //console.log("cred-match", password, user.password);
     let result = await validatePassword(password, user.password);
     console.log("result", result);
 
@@ -38,12 +38,13 @@ exports.login = async (req, res) => {
     .then((user) => {
       credentialMatch(user)
         .then((results) => {
-          console.log(result);
+          console.log(results);
           res.send(results);
         })
         .catch((error) => {
+          /**Error (promise reject handler) for wrong cred */
           console.log(error);
-          throw new Error(error);
+          res.send(error);
         });
     })
     .catch((err) => {
