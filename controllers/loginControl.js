@@ -1,5 +1,5 @@
-const { response, validatePassword } = require("../lib");
-const { ValidEmail, ValidPassword } = require("../lib/paramsValidation");
+const { response, validatePassword, getAuthToken } = require("../lib");
+const { ValidEmail } = require("../lib/paramsValidation");
 const User = require("../models/User");
 
 exports.login = async (req, res) => {
@@ -26,24 +26,26 @@ exports.login = async (req, res) => {
     //console.log("cred-match", password, user.password);
     let result = await validatePassword(password, user.password);
     console.log("result", result);
-
+    let userModified = user.toObject();
+    //delete addition info
+    delete userModified._id;
+    delete userModified.__v;
+    delete userModified.password;
     return !result
       ? Promise.reject(response(true, "Email or password is wrong", null))
-      : Promise.resolve(user);
+      : Promise.resolve(userModified);
   };
-
+  //generate authToken
+  generateToken = (userDetails) => {
+    console.log("gentoken", userDetails);
+  };
   /** Function start*/
   validateInput()
     .then(emailExistence)
     .then(credentialMatch)
+    .then(generateToken)
     .then((result) => {
       console.log(result);
-      let apiResponse = result.toObject();
-      //delete addition info
-      delete apiResponse._id;
-      delete apiResponse.__v;
-      delete apiResponse.password;
-
       res.status(200).json(response(false, "Login Success", apiResponse));
     })
     .catch((error) => {
