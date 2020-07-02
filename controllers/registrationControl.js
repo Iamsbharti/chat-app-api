@@ -4,7 +4,9 @@ const User = require("../models/User");
 const shortid = require("shortid");
 
 exports.test = (req, res) => {
-  res.status(200).json(response(false, "Test Sucess", " welcome to chat-app"));
+  res
+    .status(200)
+    .json(response(false, 200, "Test Sucess", " welcome to chat-app"));
 };
 
 exports.register = async (req, res) => {
@@ -18,7 +20,9 @@ exports.register = async (req, res) => {
     console.log(isParamsValidated);
     let result = isParamsValidated
       ? Promise.resolve(req)
-      : Promise.reject(response(true, "Params Not Valid", "email or password"));
+      : Promise.reject(
+          response(true, 400, "Params Not Valid", "email or password")
+        );
 
     return result;
   };
@@ -37,7 +41,7 @@ exports.register = async (req, res) => {
     //check for existing email
     let user = await User.findOne({ email: email });
     if (user)
-      return Promise.reject(response(true, "user already exists", email));
+      return Promise.reject(response(true, 406, "user already exists", email));
 
     //create user
     let userCreated = await User.create(newUser);
@@ -56,10 +60,10 @@ exports.register = async (req, res) => {
         delete apiResponse.__v;
         res
           .status(200)
-          .send(response(false, "user Create success", apiResponse));
+          .send(response(false, 200, "user Create success", apiResponse));
       });
   } catch (error) {
     console.warn(error);
-    res.send(error);
+    res.status(error.status).json(error);
   }
 };

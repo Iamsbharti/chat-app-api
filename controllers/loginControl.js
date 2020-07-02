@@ -10,7 +10,7 @@ exports.login = async (req, res) => {
     let isInputValid = ValidEmail(email) === email;
     return isInputValid
       ? Promise.resolve(req)
-      : Promise.reject(response(true, "Email Not Valid", email));
+      : Promise.reject(response(true, 400, "Email Not Valid", email));
   };
   //check for email existence
   emailExistence = async () => {
@@ -18,7 +18,7 @@ exports.login = async (req, res) => {
     let user = await User.findOne({ email: email });
     //console.log(user.password);
     return !user
-      ? Promise.reject(response(true, "user doesn't exists", email))
+      ? Promise.reject(response(true, 404, "user doesn't exists", email))
       : Promise.resolve(user);
   };
   //compare password
@@ -32,7 +32,7 @@ exports.login = async (req, res) => {
     delete userModified.__v;
     delete userModified.password;
     return !result
-      ? Promise.reject(response(true, "Email or password is wrong", null))
+      ? Promise.reject(response(true, 401, "Email or password is wrong", null))
       : Promise.resolve(userModified);
   };
   //generate authToken
@@ -41,7 +41,7 @@ exports.login = async (req, res) => {
     getAuthToken(userDetails, (error, tokenDetails) => {
       if (error) {
         console.log(error);
-        res = Promise.reject(response(true, "Error", error));
+        res = Promise.reject(response(true, 500, "Error", error));
       } else {
         tokenDetails.userId = userDetails.userId;
         tokenDetails.userDetails = userDetails;
@@ -57,10 +57,10 @@ exports.login = async (req, res) => {
     .then(generateToken)
     .then((result) => {
       console.log("result", result);
-      res.status(200).json(response(false, "Login Success", result));
+      res.status(200).json(response(false, 200, "Login Success", result));
     })
     .catch((error) => {
       console.log(error);
-      res.send(error);
+      res.status(error.status).json(error);
     });
 };
