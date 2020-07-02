@@ -10,7 +10,7 @@ exports.login = async (req, res) => {
     let isInputValid = ValidEmail(email) === email;
     return isInputValid
       ? Promise.resolve(req)
-      : Promise.reject(response(true, "Input Params Not Valid", email));
+      : Promise.reject(response(true, "Email Not Valid", email));
   };
   //check for email existence
   emailExistence = async () => {
@@ -31,25 +31,23 @@ exports.login = async (req, res) => {
       ? Promise.reject(response(true, "Email or password is wrong", null))
       : Promise.resolve(user);
   };
-  //
 
+  /** Function start*/
   validateInput()
     .then(emailExistence)
-    .then((user) => {
-      credentialMatch(user)
-        .then((results) => {
-          console.log(results);
-          res.send(results);
-        })
-        .catch((error) => {
-          /**Error (promise reject handler) for wrong cred */
-          console.log(error);
-          res.send(error);
-        });
+    .then(credentialMatch)
+    .then((result) => {
+      console.log(result);
+      let apiResponse = result.toObject();
+      //delete addition info
+      delete apiResponse._id;
+      delete apiResponse.__v;
+      delete apiResponse.password;
+
+      res.status(200).json(response(false, "Login Success", apiResponse));
     })
-    .catch((err) => {
-      console.log("errorhandler");
-      console.log(err);
-      res.send(err);
+    .catch((error) => {
+      console.log(error);
+      res.send(error);
     });
 };
