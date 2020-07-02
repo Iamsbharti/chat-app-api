@@ -1,6 +1,7 @@
 const { response, validatePassword, getAuthToken } = require("../lib");
 const { ValidEmail } = require("../lib/paramsValidation");
 const User = require("../models/User");
+const Auth = require("../models/Auth");
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;
@@ -43,11 +44,58 @@ exports.login = async (req, res) => {
         console.log(error);
         res = Promise.reject(response(true, 500, "Error", error));
       } else {
-        tokenDetails.userId = userDetails.userId;
         tokenDetails.userDetails = userDetails;
+        tokenDetails.userId = userDetails.userId;
+        console.log("tokendetails", tokenDetails);
         res = Promise.resolve(tokenDetails);
       }
     });
+    return res;
+  };
+  //save token for authorization needs
+  saveAuthToken = async (userTokenDetails) => {
+    console.log("save auth token");
+    const { authToken, userDetails } = userTokenDetails;
+    const { created, userId } = userDetails;
+    const tokenSecret = process.env.TOKEN_SECRET;
+    console.log("save token:", created, userId, tokenSecret);
+    let res;
+    //search for existing token if found overwrite it
+    let foundUsersAuth = await Auth.findOne({ userId: userId });
+    if (foundUsersAuth) {
+      console.log("auth details found for", userId);
+      //update
+      let updateOptions = {
+        authToken: authToken,
+        tokenSecret: tokenSecret,
+        tokenGenerationTime: created,
+      };
+      let updatedDetails = await foundUsersAuth.save(updateOptions);
+      if (updatedDetails) {
+        console.log("resolve updates");
+        res = Promise.resolve(userTokenDetails);
+      } else {
+        console.log("reject update");
+        res = Promise.reject(response(true, 500, "Save Token Error", error));
+      }
+    } else {
+      console.log("auth details not found");
+      //create
+      let newToken = new Auth({
+        userId: userId,
+        authToken: authToken,
+        tokenSecret: tokenSecret,
+        tokenGenerationTime: created,
+      });
+      let createdAuth = await Auth.create(newToken);
+      if (createdAuth) {
+        console.log("resolve create auth");
+        res = Promise.resolve(userTokenDetails);
+      } else {
+        console.log("reject create auth");
+        res = Promise.reject(response(true, 500, "Save Token Error", error));
+      }
+    }
     return res;
   };
   /** Function start*/
@@ -55,8 +103,9 @@ exports.login = async (req, res) => {
     .then(emailExistence)
     .then(credentialMatch)
     .then(generateToken)
+    .then(saveAuthToken)
     .then((result) => {
-      console.log("result", result);
+      console.log("result-final", result);
       res.status(200).json(response(false, 200, "Login Success", result));
     })
     .catch((error) => {
