@@ -1,5 +1,7 @@
 const express = require("express");
 const { response } = require("../lib");
+const jwt = require("jsonwebtoken");
+const AuthModel = require("../models/Auth");
 
 exports.logIp = (req, res, next) => {
   let ip = req.ip;
@@ -16,5 +18,45 @@ exports.notfound = (req, res, next) => {
 };
 exports.errorHandler = (error, req, res, next) => {
   res.status(500).json(response(true, "Internal Server Error", error));
+  next();
+};
+exports.isAuthorized = async (req, res, next) => {
+  console.log("is authorized middlewares");
+  const authToken = req.header("authToken");
+
+  //check for authToken as header
+  if (authToken === null || authToken === "" || authToken === undefined) {
+    return res
+      .status(401)
+      .send(response(true, 401, "AuthToken is Missing in request", null));
+  } else {
+    //if auth token is present , check it's existence in db(Auth)
+    await AuthModel.findOne(
+      { authToken: authToken },
+      (error, userAuthDetails) => {
+        if (error !== null) {
+          return res
+            .status(400)
+            .json(response(true, "No Authrorization Found", error));
+        } else {
+          //verify the authtoken
+          jwt.verify(
+            userAuthDetails.authToken,
+            userAuthDetails.tokenSecret,
+            (error, decodedInfo) => {
+              if (error) {
+                console.log("jwt decode error", error);
+                return res
+                  .status(401)
+                  .json(response(true, 401, "Authorization Failed", error));
+              } else {
+                req.userId = decodedInfo.userId;
+              }
+            }
+          );
+        }
+      }
+    );
+  }
   next();
 };
