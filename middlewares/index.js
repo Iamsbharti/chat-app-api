@@ -50,7 +50,8 @@ exports.isAuthorized = async (req, res, next) => {
                   .status(401)
                   .json(response(true, 401, "Authorization Failed", error));
               } else {
-                req.userId = decodedInfo.userId;
+                console.log(decodedInfo);
+                req.userId = decodedInfo.data.userId;
               }
             }
           );
