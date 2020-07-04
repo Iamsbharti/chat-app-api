@@ -5,6 +5,7 @@ const { initdb } = require("./initdb");
 const router = require("./routers");
 const { logIp, notfound, errorHandler } = require("./middlewares");
 const { setSocketServer } = require("./lib/socketServer");
+const path = require("path");
 //init server
 const app = express();
 dotenv.config();
@@ -15,6 +16,7 @@ initdb();
 //middlewares
 app.use(logIp);
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, "client")));
 //routes
 app.use("/api/chat", router);
 app.use(notfound);
