@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const { initdb } = require("./initdb");
 const router = require("./routers");
 const { logIp, notfound, errorHandler } = require("./middlewares");
-
+const { setSocketServer } = require("./lib/socketServer");
 //init server
 const app = express();
 dotenv.config();
@@ -21,6 +21,9 @@ app.use(notfound);
 app.use(errorHandler);
 
 //listen
-app.listen(process.env.SERVER_PORT, () => {
+let server = app.listen(process.env.SERVER_PORT, () => {
   console.log("server running at", process.env.SERVER_PORT);
 });
+
+//connect the socket server
+let socketServerInit = setSocketServer(server);
