@@ -22,18 +22,24 @@ exports.errorHandler = (error, req, res, next) => {
 };
 exports.isAuthorized = async (req, res, next) => {
   console.log("is authorized middlewares");
-  const authToken = req.header("authToken");
-
+  //const authToken = req.header("authToken");
+  console.log(req.header("authToken"));
   //check for authToken as header
-  if (authToken === null || authToken === "" || authToken === undefined) {
+  if (
+    req.header("authToken") === null ||
+    req.header("authToken") === "" ||
+    req.header("authToken") === undefined
+  ) {
     return res
       .status(401)
       .send(response(true, 401, "AuthToken is Missing in request", null));
   } else {
     //if auth token is present , check it's existence in db(Auth)
+    const authToken = req.header("authToken");
     await AuthModel.findOne(
       { authToken: authToken },
       (error, userAuthDetails) => {
+        console.log(error, userAuthDetails);
         if (error !== null) {
           return res
             .status(400)

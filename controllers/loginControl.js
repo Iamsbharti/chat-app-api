@@ -26,7 +26,7 @@ exports.login = async (req, res) => {
   credentialMatch = async (user) => {
     //console.log("cred-match", password, user.password);
     let result = await validatePassword(password, user.password);
-    console.log("result", result);
+    // console.log("result", result);
     let userModified = user.toObject();
     //delete addition info
     delete userModified._id;
@@ -46,7 +46,7 @@ exports.login = async (req, res) => {
       } else {
         tokenDetails.userDetails = userDetails;
         tokenDetails.userId = userDetails.userId;
-        console.log("tokendetails", tokenDetails);
+        //console.log("tokendetails", tokenDetails);
         res = Promise.resolve(tokenDetails);
       }
     });
@@ -61,18 +61,25 @@ exports.login = async (req, res) => {
     //search for existing token if found overwrite it
     let foundUsersAuth = await Auth.findOne({ userId: userId });
     if (foundUsersAuth) {
+      console.log("authToken", authToken);
+      console.log("created", created);
+      console.log(Date.now());
+      console.log("found user auth", foundUsersAuth);
       //update
       let updateOptions = {
         authToken: authToken,
         tokenSecret: tokenSecret,
         tokenGenerationTime: created,
       };
-      let updatedDetails = await foundUsersAuth.save(updateOptions);
+      let query = { userId: userId };
+      let updatedDetails = await Auth.updateOne(query, updateOptions);
+      console.log("updated details", updatedDetails);
       res = updatedDetails
         ? Promise.resolve(userTokenDetails)
         : Promise.reject(response(true, 500, "Save Token Error", error));
     } else {
       //create
+      console.log("no auth found --creating new");
       let newToken = new Auth({
         userId: userId,
         authToken: authToken,
