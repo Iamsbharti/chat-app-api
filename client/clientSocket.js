@@ -19,7 +19,7 @@ clientChatSocket = () => {
     n.textContent = userId;
     msg.textContent = data;
     //hide the login form
-    document.getElementById("log").hidden = true;
+    //document.getElementById("log").hidden = true;
   });
 };
 clientChatSocket();
