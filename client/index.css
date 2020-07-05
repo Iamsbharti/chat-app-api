@@ -2,12 +2,28 @@
   color: blue;
   margin-left: 90px;
 }
-.username {
-  color: green;
-}
+
 .login {
   box-sizing: border-box;
   margin-left: 40px;
   border: greenyellow;
-  border-radius: 20px;
+  border-radius: 12px;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.75);
+  max-width: 350px;
+}
+.headLine {
+  margin-left: 20px;
+  margin-top: 20px;
+  color: rgba(0, 0, 0, 12);
+}
+.username {
+  margin-top: 20px;
+  margin-left: 20px;
+}
+.pwd {
+  margin-left: 20px;
+}
+button {
+  margin-left: 20px;
+  margin-bottom: 10px;
 }
