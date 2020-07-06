@@ -1,7 +1,7 @@
 const socket = io("http://localhost:5000");
 const authToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3RpZCI6ImhST2N1QTQ0NiIsImlhdCI6MTU5Mzk1NDc0NzkwNCwiZXhwIjoxNTk0MDQxMTQ3LCJzdWIiOiJhdXRoVG9rZW4iLCJpc3MiOiJjaGF0YXBwIiwiZGF0YSI6eyJjcmVhdGVkIjoiMjAyMC0wNy0wMlQwNjowNDoyMC43MzRaIiwidXNlcklkIjoiQ1kxZFNMWjRXIiwiZmlyc3ROYW1lIjoic2F1cmFiaCIsImxhc3ROYW1lIjoiYmhhcnRpIiwibW9iaWxlIjoyOTczODM3NDgsImVtYWlsIjoic2JAYXBpLmNvbSJ9fQ.Jz3005VjmZrhfUlsRrHH_alLK8kVA8DrSAyO5xRV2_s";
-const userId = "CY1dSLZ4W";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3RpZCI6IkFaMGVxUkRVaiIsImlhdCI6MTU5NDAxMzU1MzQ2MiwiZXhwIjoxNTk0MDk5OTUzLCJzdWIiOiJhdXRoVG9rZW4iLCJpc3MiOiJjaGF0YXBwIiwiZGF0YSI6eyJjcmVhdGVkIjoiMjAyMC0wNy0wNlQwNToyNjo1Ny4zNzZaIiwidXNlcklkIjoiY2w5V3V0ZDRwIiwiZmlyc3ROYW1lIjoibmVvIiwibGFzdE5hbWUiOiJtYXRyaXgiLCJtb2JpbGUiOjI5NzM4MzEyOCwiZW1haWwiOiJuZW9AYXBpLmNvbSJ9fQ.fWa4Bx6R-ojAqwMRong45FUTmNIwl-LYV_-CAD8t1dU";
+const userId = "cl9Wutd4p";
 
 clientChatSocket = () => {
   socket.on("verify", (data) => {
@@ -21,9 +21,7 @@ clientChatSocket = () => {
   });
   document.addEventListener("DOMContentLoaded", () => {
     let sendMessageBtn = document.getElementById("send");
-    console.log(sendMessageBtn);
     let messageContent = document.getElementById("msg");
-    console.log(messageContent);
   });
 };
 clientChatSocket();

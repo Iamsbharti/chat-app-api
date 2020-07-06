@@ -88,7 +88,7 @@ exports.login = async (req, res) => {
       });
       let createdAuth = await Auth.create(newToken);
 
-      res = updatedDetails
+      res = createdAuth
         ? Promise.resolve(userTokenDetails)
         : Promise.reject(response(true, 500, "Save Token Error", error));
     }

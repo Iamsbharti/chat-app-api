@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Socket IO Chat Client</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <script src="socket.io.js"></script>
+    <script src="clientSocket.js"></script>
+
+    <h1 class="headline" id="he">Chat App</h1>
+    <div class="login">
+      <h2 id="name">Name:</h2>
+      <p class="message" id="text">Text:</p>
+    </div>
+    <div class="sendMessage">
+      <label for="msg">Type Your Message</label>
+      <input type="text" width="60%" id="msg" />
+      <button id="send">Send</button>
+    </div>
+  </body>
+</html>
