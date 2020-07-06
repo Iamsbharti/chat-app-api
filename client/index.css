@@ -29,7 +29,8 @@
   margin-top: 20px;
   margin-left: 40px;
 }
-button {
+button,
+code {
   margin-left: 20px;
   margin-bottom: 10px;
 }
