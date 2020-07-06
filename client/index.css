@@ -25,6 +25,10 @@
   color: gray;
   margin-left: 20px;
 }
+.sendMessage {
+  margin-top: 20px;
+  margin-left: 40px;
+}
 button {
   margin-left: 20px;
   margin-bottom: 10px;

@@ -18,8 +18,12 @@ clientChatSocket = () => {
     let msg = document.getElementById("text");
     n.textContent = userId;
     msg.textContent = data;
-    //hide the login form
-    //document.getElementById("log").hidden = true;
+  });
+  document.addEventListener("DOMContentLoaded", () => {
+    let sendMessageBtn = document.getElementById("send");
+    console.log(sendMessageBtn);
+    let messageContent = document.getElementById("msg");
+    console.log(messageContent);
   });
 };
 clientChatSocket();
