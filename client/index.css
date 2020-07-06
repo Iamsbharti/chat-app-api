@@ -16,11 +16,13 @@
   margin-top: 20px;
   color: rgba(0, 0, 0, 12);
 }
-.username {
+#name {
   margin-top: 20px;
   margin-left: 20px;
+  color: green;
 }
-.pwd {
+.message {
+  color: gray;
   margin-left: 20px;
 }
 button {
