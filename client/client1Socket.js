@@ -36,6 +36,11 @@ clientChatSocket = () => {
       socket.emit("typing", "Saurabh");
       console.log("keypress");
     });
+    //emitt message on send
+    sendMessageBtn.addEventListener("click", () => {
+      console.log("emit messege");
+      socket.emit("chat-msg", chatMessage);
+    });
   });
   //listen to type event
   socket.on("typing", (data) => {
@@ -43,6 +48,10 @@ clientChatSocket = () => {
     document.getElementById(
       "typeEvent"
     ).textContent = `${recieverName} is typing`;
+  });
+  //listen to incoming message
+  socket.on(chatMessage.recieverId, (data) => {
+    console.log("Recieved message from", data.senderName);
   });
 };
 clientChatSocket();

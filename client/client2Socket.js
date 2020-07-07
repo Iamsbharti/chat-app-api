@@ -36,14 +36,19 @@ clientChatSocket = () => {
       socket.emit("typing", "Neo");
       console.log("key press");
     });
+    //emitt message on send
+    sendMessageBtn.addEventListener("click", () => {
+      console.log("emit messege");
+      socket.emit("chat-msg", chatMessage);
+    });
   });
   //listen to type event
   socket.on("typing", (data) => {
     console.log("type event", data);
-    /*document.getElementById(
-      "typeEvent"
-    ).textContent = `${recieverName} is typing`;
-    */
+  });
+  //listen to incoming message
+  socket.on(chatMessage.recieverId, (data) => {
+    console.log("Recieved message from", data.senderName);
   });
 };
 clientChatSocket();
