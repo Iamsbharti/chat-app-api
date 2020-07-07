@@ -34,23 +34,25 @@ clientChatSocket = () => {
     //emit typing event on input field changes
     messageContent.addEventListener("keypress", () => {
       socket.emit("typing", "Neo");
-      //console.log("key press");
+      console.log("key press");
     });
     //emitt message on send
     sendMessageBtn.addEventListener("click", () => {
       console.log("emit messege");
-      chatMessage.message = messageContent.Value;
+      chatMessage.message = messageContent.value;
       socket.emit("chat-msg", chatMessage);
     });
   });
   //listen to type event
   socket.on("typing", (data) => {
     console.log("type event", data);
+    document.getElementById("typeEvent").textContent = data;
   });
   //listen to incoming message
   socket.on(userId, (data) => {
     console.log("Recieved message from", data.senderName);
     console.log("Message", data.message);
+    document.getElementById("typeEvent").textContent = null;
   });
   //listen to join chat room event
   socket.on("online-users", (data) => {

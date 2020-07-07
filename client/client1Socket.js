@@ -34,7 +34,7 @@ clientChatSocket = () => {
     //emit typing event on input field changes
     messageContent.addEventListener("keypress", () => {
       socket.emit("typing", "Saurabh");
-      //console.log("keypress");
+      console.log("keypress");
     });
     //emitt message on send
     sendMessageBtn.addEventListener("click", () => {
@@ -46,14 +46,14 @@ clientChatSocket = () => {
   //listen to type event
   socket.on("typing", (data) => {
     console.log("type event", data);
-    document.getElementById(
-      "typeEvent"
-    ).textContent = `${recieverName} is typing`;
+    document.getElementById("typeEvent").textContent = data;
   });
   //listen to incoming message
   socket.on(userId, (data) => {
     console.log("Recieved message from", data.senderName);
     console.log("Message", data.message);
+    //remove typing mesg from web
+    document.getElementById("typeEvent").textContent = null;
   });
   //listen to join chat room event
   socket.on("online-users", (data) => {
