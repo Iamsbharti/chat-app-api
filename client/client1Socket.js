@@ -17,7 +17,7 @@ clientChatSocket = () => {
   socket.on("auth-error", (error) => {
     console.log("auth error event listend", error);
   });
-  socket.on(userId, (data) => {
+  /*socket.on(userId, (data) => {
     console.log("You recieved a message");
     console.log(data);
     let n = document.getElementById("name");
@@ -25,7 +25,7 @@ clientChatSocket = () => {
     n.textContent = userId;
     msg.textContent = data;
     socket.emit("typing", "Neo");
-  });
+  });*/
 
   document.addEventListener("DOMContentLoaded", () => {
     let sendMessageBtn = document.getElementById("send");
@@ -34,11 +34,12 @@ clientChatSocket = () => {
     //emit typing event on input field changes
     messageContent.addEventListener("keypress", () => {
       socket.emit("typing", "Saurabh");
-      console.log("keypress");
+      //console.log("keypress");
     });
     //emitt message on send
     sendMessageBtn.addEventListener("click", () => {
       console.log("emit messege");
+      chatMessage.message = messageContent.value;
       socket.emit("chat-msg", chatMessage);
     });
   });
@@ -50,8 +51,13 @@ clientChatSocket = () => {
     ).textContent = `${recieverName} is typing`;
   });
   //listen to incoming message
-  socket.on(chatMessage.recieverId, (data) => {
+  socket.on(userId, (data) => {
     console.log("Recieved message from", data.senderName);
+    console.log("Message", data.message);
+  });
+  //listen to join chat room event
+  socket.on("online-users", (data) => {
+    data.map((u) => console.log("->" + u.name));
   });
 };
 clientChatSocket();
