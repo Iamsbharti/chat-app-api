@@ -49,6 +49,9 @@ code {
   box-sizing: border-box;
   border: greenyellow;
   border-radius: 09px;
-  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.75);
+  list-style: none;
   max-width: 350px;
+}
+.online-users li {
+  list-style: none;
 }

@@ -56,8 +56,15 @@ clientChatSocket = () => {
   });
   //listen to join chat room event
   socket.on("online-users", (data) => {
-    console.log("Online users");
-    data.map((u) => console.log("->" + u.name));
+    let usrList = [];
+    data.map((u) => usrList.push(u.name));
+    console.log(usrList);
+    //set online users lists
+    let onlineUsersDiv = document.getElementById("users");
+    onlineUsersDiv.innerHTML = `<ul>
+    <li>${usrList[0]}</li>
+    <li>${usrList[1]}</li>
+  </ul>`;
   });
 };
 clientChatSocket();
