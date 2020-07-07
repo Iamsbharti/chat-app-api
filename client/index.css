@@ -5,14 +5,17 @@
   color: blue;
   margin-left: 90px;
 }
-
+#typeEvent {
+  margin-top: 30px;
+  font-style: italic;
+}
 .login {
   box-sizing: border-box;
-  margin-left: 40px;
   border: greenyellow;
-  border-radius: 12px;
-  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.75);
-  max-width: 350px;
+  color: rgb(65, 66, 64);
+  width: fit-content;
+  display: flex;
+  align-items: center;
 }
 .headLine {
   margin-left: 20px;
@@ -30,10 +33,22 @@
 }
 .sendMessage {
   margin-top: 20px;
-  margin-left: 40px;
+  box-sizing: border-box;
+  border: greenyellow;
+  border-radius: 12px;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.75);
+  max-width: 350px;
 }
 button,
 code {
   margin-left: 20px;
   margin-bottom: 10px;
+}
+.online-users {
+  margin-top: 20px;
+  box-sizing: border-box;
+  border: greenyellow;
+  border-radius: 09px;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.75);
+  max-width: 350px;
 }
