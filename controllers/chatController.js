@@ -1,7 +1,7 @@
 const { validateGetChatParams } = require("../lib/paramsValidation");
-const { request } = require("express");
 const { response } = require("../lib");
-exports.getChatForUser = (req, res) => {
+const Chat = require("../models/Chat");
+exports.getChatForUser = async (req, res) => {
   console.log("get chat for user route control");
   console.log("params", req.query);
   validateRequest = () => {
@@ -16,15 +16,41 @@ exports.getChatForUser = (req, res) => {
     }
     return result;
   };
-  getChatDetails = () => {
+  getChatDetails = async () => {
+    const { senderId, recieverId } = req.query;
+
     console.log("get chat details");
-    return Promise.resolve(true);
+    let findChatQuery = {
+      $or: [
+        {
+          $and: [{ senderId: senderId }, { recieverId: recieverId }],
+        },
+        {
+          $and: [{ recieverId: senderId }, { senderId: recieverId }],
+        },
+      ],
+    };
+    console.log("finding chat");
+    let result;
+    let foundChat = await Chat.find(findChatQuery)
+      .select("-_id -__v -chatRoom") //remove params
+      .sort("-createdOn") //sort based on date
+      .skip(req.query.skip || 0) //for pagination purpose
+      .lean() //convert mongoose doc to plain js objects
+      .limit(10) //limit the no of chat returned ,controled for pagination---//execute
+      .exec();
+    console.log(foundChat);
+    result = foundChat
+      ? Promise.resolve(foundChat)
+      : response(true, "Error fetching chat details", 401, error);
+
+    return result;
   };
   validateRequest()
     .then(getChatDetails)
     .then((result) => {
-      console.log(result);
-      res.send(result);
+      console.log("result-final", result);
+      res.status(200).json(response(false, 200, "Chat Found", result));
     })
     .catch((error) => {
       console.log(error);
