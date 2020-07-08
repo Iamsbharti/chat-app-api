@@ -39,9 +39,8 @@ exports.getChatForUser = async (req, res) => {
       .lean() //convert mongoose doc to plain js objects
       .limit(10) //limit the no of chat returned ,controled for pagination---//execute
       .exec();
-    console.log(foundChat);
     result = foundChat
-      ? Promise.resolve(foundChat)
+      ? Promise.resolve(foundChat.reverse())
       : response(true, "Error fetching chat details", 401, error);
 
     return result;
@@ -49,7 +48,7 @@ exports.getChatForUser = async (req, res) => {
   validateRequest()
     .then(getChatDetails)
     .then((result) => {
-      console.log("result-final", result);
+      console.log("result-final");
       res.status(200).json(response(false, 200, "Chat Found", result));
     })
     .catch((error) => {
