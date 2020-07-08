@@ -23,7 +23,8 @@ exports.errorHandler = (error, req, res, next) => {
 exports.isAuthorized = async (req, res, next) => {
   console.log("is authorized middlewares");
   //const authToken = req.header("authToken");
-  console.log(req.header("authToken"));
+  //console.log(req.header("authToken"));
+
   //check for authToken as header
   if (
     req.header("authToken") === null ||
@@ -56,7 +57,7 @@ exports.isAuthorized = async (req, res, next) => {
                   .status(401)
                   .json(response(true, 401, "Authorization Failed", error));
               } else {
-                console.log(decodedInfo);
+                //console.log(decodedInfo);
                 req.userId = decodedInfo.data.userId;
               }
             }
